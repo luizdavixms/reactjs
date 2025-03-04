@@ -2,19 +2,36 @@ import {FaUser, FaLock} from "react-icons/fa"
 import { useState } from "react"
 import "./Login.css"
 
-const Login = () => {
+
+const Registrar = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        console.log("Envio")
+        fetch('http://localhost:3000/users', {
+            method: 'POST', // Tipo de requisição (POST)
+            headers: {
+              'Content-Type': 'application/json', // Definindo o tipo de conteúdo como JSON
+            },
+            body: JSON.stringify({
+              name: username, // Passando o nome do usuário
+              email: password, // Aqui, usei a senha como email, mas ajuste conforme sua necessidade
+            }),
+          })
+            .then((response) => response.json()) // Converte a resposta para JSON
+            .then((data) => {
+              console.log('Usuário criado:', data); // Exibe a resposta da criação
+            })
+            .catch((error) => {
+              console.error('Erro ao criar usuário:', error); // Captura erros de rede
+            });
     }
 
     return(
         <div className="container">
             <form onSubmit={handleSubmit}>
-                <h1>Acesse o sistema</h1>
+                <h1>CADASTRO</h1>
                 <div>
                     <input type="email" placeholder="E-mail" 
                     onChange={ (e) => setUsername(e.target.value) } />
@@ -29,19 +46,14 @@ const Login = () => {
                 <div className="recall-forget">
                     <label>
                         <input type="checkbox" />
-                        Lembre de mim
+                        Manter Conectado
                     </label>
-                    <a href="#">Esqueceu a senha?</a>
                 </div>
 
                 <button>Entrar</button>
-
-                <div className="signup-link">
-                    <p>Não tem uma conta? <a href="#">Registrar</a></p>
-                </div>
             </form>
         </div>
     )
 }
 
-export default Login
+export default Registrar
